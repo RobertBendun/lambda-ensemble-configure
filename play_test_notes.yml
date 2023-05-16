@@ -1,0 +1,26 @@
+- name: Play test notes
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Stop Helm if it is running
+      ansible.builtin.command: "killall helm"
+      failed_when: false
+      changed_when: false
+
+    # TODO Somehow save PID so only our helm will be closed and not all of them at the end
+    - name: Start Helm
+      ansible.builtin.shell: helm
+      async: 1000
+      poll: 0
+
+    - name: Wait 5 seconds for Helm to start
+      wait_for:
+        timeout: 5
+
+    - name: Play  notes with Musique
+      ansible.builtin.command: "musique -c 'play c e g'"
+
+    - name: Stop Helm
+      ansible.builtin.command: "killall helm"
+
+
