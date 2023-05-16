@@ -10,7 +10,7 @@ REMOTE_USER_BECOME_PASSWORD="ensamble"
 # TODO: This cache should have been overwritten via a flag like --scan
 if [ ! -f hosts ]; then
 	echo "[lambda_ensamble_vm]" > hosts
-	nmap -n -sn "${REMOTE_NETWORK}" -oG - | awk '/Up$/{print $2}' | grep -vE "^$(hostname -i | tr ' ' '|')\$" >> hosts
+	nmap -n -sn "${REMOTE_NETWORK}" -oG - | awk '/Up$/{print $2}' | grep -vE "^($(hostname -i | tr ' ' '|'))\$" >> hosts
 	echo "[lambda_ensamble_vm:vars]" >> hosts
 	echo "ansible_user=${REMOTE_USER}" >> hosts
 	echo "ansible_become_password=${REMOTE_USER_BECOME_PASSWORD}" >> hosts
