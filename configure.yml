@@ -1,0 +1,39 @@
+- name: Configure remotes
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Prepare required files on local machine
+      delegate_to: localhost
+      block:
+        # This is a seperate step on local machine, since in target enviroment where this script
+        # is going to be used they may not be an internet connection.
+        - name: "Download Helm package"
+          ansible.builtin.get_url:
+            url: "https://tytel.org/static/dist/helm_0.9.0_amd64_r.deb"
+            checksum: "sha256:aedf8b676657f72782513e5ad5f9c61a6bc21fe9357b23052928adafa8215eca"
+            dest: "./helm_0.9.0_amd64_r.deb"
+
+    - name: Copy Musique executable
+      ansible.builtin.copy:
+        src: musique
+        dest: /usr/local/bin/musique
+        mode: '0755'
+      become: true
+
+    - name: Check if Helm is installed
+      ansible.builtin.command: which helm
+      changed_when: false
+      failed_when: false
+      register: helm_installed
+
+    - name: Copy and install Helm
+      when: helm_installed.rc != 0
+      block:
+        - name: "Copy Helm package"
+          ansible.builtin.copy:
+            src: "helm_0.9.0_amd64_r.deb"
+            dest: "/tmp/helm.deb"
+
+        - name: "Install Helm"
+          ansible.builtin.command: "apt install /tmp/helm.deb"
+          become: yes
