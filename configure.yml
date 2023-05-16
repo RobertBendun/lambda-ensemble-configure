@@ -15,6 +15,8 @@
 
     - name: Copy Musique executable
       ansible.builtin.copy:
+        # TODO: Maybe this should automatically build Musique in docker?
+        # At least it shouldn't assume that there is valid Musique executable in this directory
         src: musique
         dest: /usr/local/bin/musique
         mode: '0755'
