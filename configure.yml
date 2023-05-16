@@ -22,6 +22,21 @@
         mode: '0755'
       become: true
 
+    - name: Ensure that /usr/local/man/man1/ exists
+      ansible.builtin.file:
+        path: /usr/local/man/man1/
+        state: directory
+        mode: '0755'
+      become: true
+
+    - name: Generate Musique manpage
+      ansible.builtin.shell: "musique man > /usr/local/man/man1/musique.1"
+      become: true
+
+    - name: Update man database
+      ansible.builtin.command: mandb
+      become: true
+
     - name: Check if Helm is installed
       ansible.builtin.command: which helm
       changed_when: false
