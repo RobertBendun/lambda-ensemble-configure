@@ -1,0 +1,13 @@
+# [lambda2]
+# 192.168.1.101
+#
+# [lambda2:vars]
+# ansible_user=lambda
+# ansible_become_password=12341234
+#
+[lambda3]
+192.168.1.211
+
+[lambda3:vars]
+ansible_user=lambda3
+ansible_become_password=12341234

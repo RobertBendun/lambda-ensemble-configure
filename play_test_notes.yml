@@ -1,6 +1,8 @@
 - name: Play test notes
   hosts: all
   gather_facts: false
+  vars:
+    - helm_wait: 30
   tasks:
     - name: Stop Helm if it is running
       ansible.builtin.command: "killall helm"
@@ -13,9 +15,9 @@
       async: 1000
       poll: 0
 
-    - name: Wait 5 seconds for Helm to start
+    - name: Wait {{ helm_wait }} seconds for Helm to start
       wait_for:
-        timeout: 5
+        timeout: "{{ helm_wait }}"
 
     - name: Play  notes with Musique
       ansible.builtin.command: "musique -c 'play c e g'"

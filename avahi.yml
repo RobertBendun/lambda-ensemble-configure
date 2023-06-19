@@ -1,0 +1,16 @@
+- name: Configure new machine
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Install Avahi
+      ansible.builtin.apt:
+        update_cache: true
+        name: avahi-daemon
+        state: present
+
+    - name: Start and enable Avahi
+      ansible.builtin.systemd:
+        name: avahi-daemon
+        state: started
+        enabled: true
+
